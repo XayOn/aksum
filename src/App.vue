@@ -9,18 +9,46 @@
       rel="stylesheet"
     />
     <v-app-bar :collapse-on-scroll="true" absolute color="deep-purple accent-4" dark>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <b>aksum</b> &nbsp; Torrent-based open library
+        <b class="display-1">aksum</b>
+        <v-divider class="mx-12" inset vertical></v-divider>
+        <span>Torrent-based open library</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon v-on:click="showSettings=!showSettings" color="white">
-        <v-icon>mdi-cog</v-icon>
-      </v-btn>
+      <v-bottom-sheet v-model="showSettings" persistent>
+        <template v-slot:activator="{ on }">
+          <v-btn color="green" dark v-on="on">
+            <v-icon>mdi-cog</v-icon>
+          </v-btn>
+        </template>
+        <v-sheet class="text-center">
+          <v-btn class="mt-6" text color="error" @click="showSettings = !showSettings">close</v-btn>
+          <Settings
+            v-if="showSettings"
+            v-on:torrentDeleted="torrentDeleted"
+            v-on:torrentAdded="torrentAdded"
+            :client="client"
+          />
+        </v-sheet>
+      </v-bottom-sheet>
     </v-app-bar>
     <v-content class="body">
-      <Settings v-if="showSettings" v-on:torrentAdded="torrentAdded" :client="client" />
-      <SearchBox v-if="!showSettings" :books="books" />
+      <v-row>
+        <p
+          class="text-center col-md-6 offset-md-3 display-3"
+        >Search and download books from torrents, directly from your browser</p>
+      </v-row>
+      <v-row>
+        <SearchBox v-if="!showSettings" :books="books" />
+      </v-row>
+      <v-divider class="mt-12 mb-12"></v-divider>
+      <v-row>
+        <v-alert outlined type="info" class="mt-12 col-md-4 offset-md-4">
+          Tip: ¿Can't find a book?
+          <br />Try the settings (
+          <v-icon>mdi-cog</v-icon>) button to add custom torrent book sources.
+        </v-alert>
+      </v-row>
     </v-content>
   </v-app>
 </template>
@@ -46,13 +74,18 @@ export default {
         ? JSON.parse(localStorage.torrent_list)
         : [];
     },
+
+    torrentDeleted: async function(item) {
+      this.books = this.books.filter(
+        value => value.infoHash == item.decoded.infoHash
+      );
+    },
+
     torrentAdded: async function(item) {
-      console.log(`Added torrent ${item.torrent}`);
       this.books = [
         ...this.books,
         ...(await this.getTorrentFiles(this.client, item))
       ];
-      console.log(`Updated file list. Current ${this.books.length}`);
     }
   },
   data: function() {
@@ -66,7 +99,7 @@ export default {
     this.$vuetify.theme.dark = true;
     let gist = this.query_string["gist"];
     if (gist) {
-      for (let url of await this.getFromGist(gist.split('_'))) {
+      for (let url of await this.getFromGist(gist.split("_"))) {
         this.addTorrent(this.torrentUrls(), url);
       }
     }

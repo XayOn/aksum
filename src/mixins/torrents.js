@@ -7,7 +7,7 @@ export default {
             client.add(torrent_origin.torrent, torrent => {
                 for (let file of torrent.files) {
                     files.push({
-                        torrent: torrent,
+                        file: file, 
                         label_name: file.path
                     });
                 }

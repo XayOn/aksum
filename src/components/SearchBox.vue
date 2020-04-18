@@ -34,7 +34,7 @@ export default {
     selectedItem: function() {
       this.loading = true;
       this.blobUrl = false;
-      this.value.torrent.getBlobURL((_, url) => {
+      this.value.file.getBlobURL((_, url) => {
         this.blobUrl = url;
         this.loading = false;
       });

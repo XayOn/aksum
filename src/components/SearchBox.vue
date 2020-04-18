@@ -35,7 +35,7 @@ export default {
     return {
       searchLabel: label,
       value: "",
-      loading: this.books.length == 0,
+      loading: this.books.length == 0 && this.torrents.length != 0,
       blobName: "",
       blobUrl: false
     };

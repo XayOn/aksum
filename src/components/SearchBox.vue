@@ -34,6 +34,7 @@ export default {
     selectedItem: function() {
       this.loading = true;
       this.blobUrl = false;
+        this.blobName = this.value.file.path;
       this.value.file.getBlobURL((_, url) => {
         this.blobUrl = url;
         this.loading = false;

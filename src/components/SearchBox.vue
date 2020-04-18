@@ -9,7 +9,7 @@
       v-model="value"
       :loading="loading"
       v-on:change="selectedItem"
-      label="Book"
+      label="Search on books titles, authors..."
     >
       <template v-slot:append-outer>
         <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
@@ -34,7 +34,7 @@ export default {
     selectedItem: function() {
       this.loading = true;
       this.blobUrl = false;
-        this.blobName = this.value.file.path;
+      this.blobName = this.value.file.path;
       this.value.file.getBlobURL((_, url) => {
         this.blobUrl = url;
         this.loading = false;

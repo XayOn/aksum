@@ -8,31 +8,41 @@
       href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
       rel="stylesheet"
     />
-    <v-app-bar :collapse-on-scroll="true" absolute color="deep-purple accent-4" dark>
-      <v-toolbar-title>
-        <b class="display-1">aksum</b>
-        <v-divider class="mx-12" inset vertical></v-divider>
-        <span>Torrent-based open library</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-bottom-sheet v-model="showSettings" persistent>
-        <template v-slot:activator="{ on }">
-          <v-btn color="green" dark v-on="on">
-            <v-icon>mdi-cog</v-icon>
-          </v-btn>
-        </template>
-        <v-sheet class="text-center">
-          <v-btn class="mt-6" text color="error" @click="showSettings = !showSettings">close</v-btn>
-          <Settings
-            v-if="showSettings"
-            v-on:torrentDeleted="torrentDeleted"
-            v-on:torrentAdded="torrentAdded"
-            :client="client"
-          />
-        </v-sheet>
-      </v-bottom-sheet>
-    </v-app-bar>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap"
+      rel="stylesheet"
+    />
+
+    <v-row>
+      <v-col cols="1" offset="11">
+        <v-bottom-sheet v-model="showSettings" persistent>
+          <template v-slot:activator="{ on }">
+            <v-btn color="rgba(0,0,0,0)" dark v-on="on" class="float-right">
+              <v-icon>mdi-cog</v-icon>
+            </v-btn>
+          </template>
+          <v-sheet class="text-center">
+            <v-btn class="mt-6" text color="error" @click="showSettings = !showSettings">close</v-btn>
+            <Settings
+              v-if="showSettings"
+              v-on:torrentDeleted="torrentDeleted"
+              v-on:torrentAdded="torrentAdded"
+              :client="client"
+            />
+          </v-sheet>
+        </v-bottom-sheet>
+      </v-col>
+    </v-row>
     <v-content class="body">
+      <v-row class="text-center">
+        <v-col cols="4" offset="4">
+          <h2 class="maintitle display-3 mb-12">
+            <v-icon class="middle_icon" size="xxx-large">mdi-book-open-variant</v-icon>
+            <span>aksum</span>
+          </h2>
+        </v-col>
+      </v-row>
       <v-row>
         <p
           class="text-center col-md-6 offset-md-3 display-3"
@@ -111,7 +121,12 @@ export default {
 </script>
 
 <style scoped>
-.body {
-  margin-top: 200px;
+.maintitle {
+  font-family: "Comfortaa", cursive;
+  font-weight: lighter;
+}
+.middle_icon {
+  margin-top: -0.15em;
+  margin-right: 0.25em;
 }
 </style>

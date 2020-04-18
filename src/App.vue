@@ -66,7 +66,7 @@ export default {
     this.$vuetify.theme.dark = true;
     let gist = this.query_string["gist"];
     if (gist) {
-      for (let url of await this.getFromGist(gist)) {
+      for (let url of await this.getFromGist(gist.split('_'))) {
         this.addTorrent(this.torrentUrls(), url);
       }
     }

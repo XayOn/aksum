@@ -38,7 +38,7 @@ export default {
     return {
       display: false,
       torrent_uri: "",
-      torrent_list: JSON.parse(localStorage.torrent_list?localStorage.torrent_list:[]),
+      torrent_list: JSON.parse(localStorage.torrent_list?localStorage.torrent_list:"[]"),
       headers: [
         { text: "Name", align: "start", value: "decoded.name" },
         { text: "Hash", align: "start", value: "decoded.infoHash" }

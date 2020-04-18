@@ -49,7 +49,7 @@
         >Search and download books from torrents, directly from your browser</p>
       </v-row>
       <v-row>
-        <SearchBox v-if="!showSettings" :books="books" />
+        <SearchBox v-if="!showSettings" :torrents="torrentUrls()" :books="books" />
       </v-row>
       <v-divider class="mt-12 mb-12"></v-divider>
       <v-row>

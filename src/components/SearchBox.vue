@@ -9,7 +9,7 @@
       v-model="value"
       :loading="loading"
       v-on:change="selectedItem"
-      label="Search on books titles, authors..."
+      :label="searchLabel"
     >
       <template v-slot:append-outer>
         <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
@@ -23,13 +23,23 @@
 <script>
 export default {
   name: "SearchBox",
-  props: ["books"],
-  data: () => ({
-    value: "",
-    loading: false,
-    blobName: "",
-    blobUrl: false
-  }),
+  props: ["books", "torrents"],
+  data: function() {
+    let label = `Search ${this.books.length} books`;
+    console.log(this.torrents.length);
+    if (this.books.length == 0 && this.torrents.length != 0) {
+      label = "Loading...";
+    } else if (this.books.length == 0 && this.torrents.length == 0) {
+      label = "No data sources available";
+    }
+    return {
+      searchLabel: label,
+      value: "",
+      loading: this.books.length == 0,
+      blobName: "",
+      blobUrl: false
+    };
+  },
   methods: {
     selectedItem: function() {
       this.loading = true;

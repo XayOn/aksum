@@ -13,22 +13,19 @@ export default {
                 ? JSON.parse(localStorage.torrent_list)
                 : [];
         },
-        getTorrentFiles: (client, torrent_origin) => {
-            let resolve_func = null;
-            const response = new Promise(function (resolve) {resolve_func = resolve;})
-            const files = [];
-            let parsed = magnet.encode(torrent_origin.decoded);
+        looksLikeBook: function (path) {
+            let ext = path.split(".").pop().toLowerCase();
+            return EBOOK_EXTENSIONS.indexOf(ext) != -1
+        },
+        getTorrentFiles: function (client, torrentOrigin, torrentList) {
+            let parsed = magnet.encode(torrentOrigin.decoded);
             client.add(parsed, torrent => {
                 for (let file of torrent.files) {
-                    file.deselect()
-                    let ext = file.path.split(".").pop().toLowerCase();
-                    if (EBOOK_EXTENSIONS.indexOf(ext) != -1) {
-                        files.push({torrent: torrent_origin.decoded.infoHash, file: file, label_name: file.path});
+                    if (this.looksLikeBook(file.path)) {
+                        torrentList.push({torrent: torrentOrigin.decoded.infoHash, file: file, label_name: file.path});
                     }
                 }
-                resolve_func(files);
             });
-            return response;
         },
         addTorrent: (list, torrent_origin) => {
             if (!list.some(a => a.torrent == torrent_origin)) {

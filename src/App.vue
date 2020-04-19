@@ -22,7 +22,7 @@
     </v-row>
     <v-content class="body">
       <v-row class="text-center">
-        <v-col cols="12" >
+        <v-col cols="12">
           <h2 class="maintitle display-3 text-center mb-12">
             <v-icon class="middle_icon" size="xxx-large">mdi-book-open-variant</v-icon>
             <span>aksum</span>
@@ -35,7 +35,7 @@
         >Search and download books from torrents, directly from your browser</p>
       </v-row>
       <v-row>
-        <SearchBox v-if="!showSettings" :books="books" />
+        <SearchBox v-if="!showSettings" :torrents="torrents" :books="books" />
       </v-row>
       <v-divider class="mt-12 mb-12"></v-divider>
       <v-row>
@@ -71,15 +71,13 @@ export default {
       );
     },
 
-    torrentAdded: async function(item) {
-      this.books = [
-        ...this.books,
-        ...(await this.getTorrentFiles(this.client, item))
-      ];
+    torrentAdded: function(item) {
+      this.getTorrentFiles(this.client, item, this.books);
     }
   },
   data: function() {
     return {
+      torrents: [],
       books: [],
       showSettings: false,
       client: new WebTorrent()
@@ -89,18 +87,11 @@ export default {
     this.$vuetify.theme.dark = true;
     let gist = this.query_string["gist"];
     if (gist) {
-      let dirty = false;
       for (let url of await this.getFromGist(gist.split("_"))) {
         let new_torrent = this.addTorrent(this.torrentUrls(), url);
-        if (new_torrent) {
-          dirty = true;
-        }
-      }
-      if (dirty) {
-        // FML. Fix tomorrow.
-        window.location.reload();
       }
     }
+    this.torrents = this.torrentUrls();
 
     for (let item of this.torrentUrls()) {
       this.torrentAdded(item);

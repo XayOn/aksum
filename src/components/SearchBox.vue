@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    {{books.length}}
     <v-autocomplete
       :items="books"
       item-key="label_name"
@@ -24,20 +25,25 @@
 import TorrentMixin from "../mixins/torrents.js";
 export default {
   name: "SearchBox",
-  props: ["books"],
+  props: ["books", "torrents"],
   mixins: [TorrentMixin],
-  data: function() {
-    let torrents = this.torrentUrls();
-    let label = `Search ${this.books.length} books`;
-    if (this.books.length == 0 && torrents.length != 0) {
-      label = "Loading...";
-    } else if (this.books.length == 0 && torrents.length == 0) {
-      label = "No data sources available";
+  computed: {
+    searchLabel: function() {
+      let label = `Search ${this.books.length} books`;
+      if (this.books.length == 0 && this.torrents.length != 0) {
+        label = "Loading...";
+      } else if (this.books.length == 0 && this.torrents.length == 0) {
+        label = "No data sources available";
+      }
+      return label;
+    },
+    loading: function() {
+      return this.books.length == 0 && this.torrents.length != 0;
     }
+  },
+  data: function() {
     return {
-      searchLabel: label,
       value: "",
-      loading: this.books.length == 0 && torrents.length != 0,
       blobName: "",
       blobUrl: false
     };

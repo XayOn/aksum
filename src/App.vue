@@ -88,7 +88,7 @@ export default {
     let gist = this.query_string["gist"];
     if (gist) {
       for (let url of await this.getFromGist(gist.split("_"))) {
-        let new_torrent = this.addTorrent(this.torrentUrls(), url);
+        this.addTorrent(this.torrentUrls(), url);
       }
     }
     this.torrents = this.torrentUrls();

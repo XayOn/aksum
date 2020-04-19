@@ -8,6 +8,11 @@ const EBOOK_EXTENSIONS = [
 
 export default {
     methods: {
+        torrentUrls: function () {
+            return localStorage.torrent_list
+                ? JSON.parse(localStorage.torrent_list)
+                : [];
+        },
         getTorrentFiles: (client, torrent_origin) => {
             let resolve_func = null;
             const response = new Promise(function (resolve) {resolve_func = resolve;})

@@ -49,7 +49,7 @@
         >Search and download books from torrents, directly from your browser</p>
       </v-row>
       <v-row>
-        <SearchBox v-if="!showSettings" :torrents="torrentUrls()" :books="books" />
+        <SearchBox v-if="!showSettings" :books="books" />
       </v-row>
       <v-divider class="mt-12 mb-12"></v-divider>
       <v-row>
@@ -79,12 +79,6 @@ export default {
     Settings
   },
   methods: {
-    torrentUrls: function() {
-      return localStorage.torrent_list
-        ? JSON.parse(localStorage.torrent_list)
-        : [];
-    },
-
     torrentDeleted: async function(item) {
       this.books = this.books.filter(
         value => value.infoHash == item.decoded.infoHash
@@ -109,10 +103,19 @@ export default {
     this.$vuetify.theme.dark = true;
     let gist = this.query_string["gist"];
     if (gist) {
+      let dirty = false;
       for (let url of await this.getFromGist(gist.split("_"))) {
-        this.addTorrent(this.torrentUrls(), url);
+        let new_torrent = this.addTorrent(this.torrentUrls(), url);
+        if (new_torrent) {
+          dirty = true;
+        }
+      }
+      if (dirty) {
+          // FML. Fix tomorrow. 
+        window.location.reload();
       }
     }
+
     for (let item of this.torrentUrls()) {
       this.torrentAdded(item);
     }

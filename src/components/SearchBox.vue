@@ -21,21 +21,23 @@
 </template>
 
 <script>
+import TorrentMixin from "../mixins/torrents.js";
 export default {
   name: "SearchBox",
-  props: ["books", "torrents"],
+  props: ["books"],
+  mixins: [TorrentMixin],
   data: function() {
+    let torrents = this.torrentUrls();
     let label = `Search ${this.books.length} books`;
-    console.log(this.torrents.length);
-    if (this.books.length == 0 && this.torrents.length != 0) {
+    if (this.books.length == 0 && torrents.length != 0) {
       label = "Loading...";
-    } else if (this.books.length == 0 && this.torrents.length == 0) {
+    } else if (this.books.length == 0 && torrents.length == 0) {
       label = "No data sources available";
     }
     return {
       searchLabel: label,
       value: "",
-      loading: this.books.length == 0 && this.torrents.length != 0,
+      loading: this.books.length == 0 && torrents.length != 0,
       blobName: "",
       blobUrl: false
     };

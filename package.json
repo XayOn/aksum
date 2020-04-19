@@ -12,6 +12,7 @@
         "aws-sdk": "^2.658.0",
         "axios": "^0.19.2",
         "core-js": "^3.6.4",
+        "parse-filepath": "^1.0.2",
         "vue": "^2.6.11",
         "vuetify": "^2.2.11",
         "webtorrent": "^0.108.1"

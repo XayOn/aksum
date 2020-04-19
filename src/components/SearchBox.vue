@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    {{books.length}}
     <v-autocomplete
       :items="books"
       item-key="label_name"

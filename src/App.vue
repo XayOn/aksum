@@ -22,8 +22,8 @@
     </v-row>
     <v-content class="body">
       <v-row class="text-center">
-        <v-col cols="4" offset="4">
-          <h2 class="maintitle display-3 mb-12">
+        <v-col cols="12" >
+          <h2 class="maintitle display-3 text-center mb-12">
             <v-icon class="middle_icon" size="xxx-large">mdi-book-open-variant</v-icon>
             <span>aksum</span>
           </h2>

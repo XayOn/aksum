@@ -1,19 +1,5 @@
 <template>
   <v-app>
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
-      rel="stylesheet"
-    />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap"
-      rel="stylesheet"
-    />
-
     <v-row>
       <v-col cols="1" offset="11">
         <v-bottom-sheet v-model="showSettings" persistent>
@@ -111,7 +97,7 @@ export default {
         }
       }
       if (dirty) {
-          // FML. Fix tomorrow. 
+        // FML. Fix tomorrow.
         window.location.reload();
       }
     }

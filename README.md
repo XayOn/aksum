@@ -11,6 +11,8 @@ It allows you to download specific books from webtorrents.
   <a href="#tecnology">Tecnology</a> •
 </p>
 
+You can see it in action, with an open (copyright free) book torrent [here](http://davidfrancos.net/aksum/?gist=XayOn_cbfd322b2e77fe01c206d8039d892e84_0afac922b24bc3c069db814654b470523df85dad)
+
 ![Screenshot](https://raw.githubusercontent.com/xayon/aksum/master/screenshot.png "Screenshot")
 
 ## Features

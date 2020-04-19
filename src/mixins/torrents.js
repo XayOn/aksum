@@ -20,6 +20,7 @@ export default {
             let parsed = magnet.encode(torrent_origin.decoded);
             client.add(parsed, torrent => {
                 for (let file of torrent.files) {
+                    file.deselect()
                     let ext = file.path.split(".").pop().toLowerCase();
                     if (EBOOK_EXTENSIONS.indexOf(ext) != -1) {
                         files.push({torrent: torrent_origin.decoded.infoHash, file: file, label_name: file.path});

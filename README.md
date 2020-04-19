@@ -1,6 +1,6 @@
 # aksum - Decentralized, client-side library
 
-<h1 align="center"><br><a href="https://davidfrancos.net/aksum/"><img src="https://raw.githubusercontent.com/xayon/aksum/master/dist/logo.png" alt="AKSUM" width="600"></a></h1>
+<h1 align="center"><br><a href="https://davidfrancos.net/aksum/"><img src="https://raw.githubusercontent.com/xayon/aksum/master/logo.png" alt="AKSUM" width="600"></a></h1>
 
 AKSUM is a decentralized book download tool.
 It allows you to download specific books from webtorrents.

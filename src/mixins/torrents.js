@@ -34,7 +34,6 @@ export default {
         },
         getTorrentFiles: function (client, torrentOrigin, torrentList) {
             let parsed = magnet.encode(torrentOrigin.decoded);
-            window.client = client;
             client.add(parsed, torrent => {
                 for (let file of torrent.files) {
                     let parsedPath = parsePath(file.path);

@@ -64,6 +64,7 @@ export default {
       this.client.get(this.fullTorrent).destroy();
     },
     selectedItem: async function() {
+        this.blobUrl = false;
       this.downloading = true;
       this.fullTorrent = this.value.fullTorrent;
       this.blobUrl = await this.getTorrentFile(

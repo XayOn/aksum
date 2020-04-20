@@ -14,16 +14,42 @@ export default {
                 ? JSON.parse(localStorage.torrent_list)
                 : [];
         },
+        getTorrentFile: function (client, fullTorrent, filePath) {
+            let resolveFunc = null;
+            let result = new Promise(function (resolve) {
+                resolveFunc = resolve;
+            })
+            client.add(fullTorrent, torrent => {
+                for (let file of torrent.files) {
+                    if (file.path == filePath) {
+                        file.getBlobURL((err, url) => {
+                            // TODO: handle errors
+                            console.log(err)
+                            return resolveFunc(url);
+                        })
+                    }
+                }
+            })
+            return result;
+        },
         getTorrentFiles: function (client, torrentOrigin, torrentList) {
             let parsed = magnet.encode(torrentOrigin.decoded);
+            window.client = client;
             client.add(parsed, torrent => {
                 for (let file of torrent.files) {
                     let parsedPath = parsePath(file.path);
                     let ext = parsedPath.ext.substring(1);
                     if (EBOOK_EXTENSIONS.indexOf(ext) != -1) {
-                        torrentList.push({torrent: torrentOrigin.decoded.infoHash, file: file, label_name: `[${ext}] ${parsedPath.name}`});
+                        torrentList.push({
+                            filePath: file.path,
+                            downloadName: `${parsedPath.name}${parsedPath.ext}`,
+                            torrent: torrentOrigin.decoded.infoHash,
+                            label_name: `[${ext}] ${parsedPath.name}`,
+                            fullTorrent: torrentOrigin.torrent
+                        });
                     }
                 }
+                torrent.destroy()
             });
         },
         addTorrent: (list, torrent_origin) => {

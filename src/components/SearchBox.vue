@@ -12,7 +12,14 @@
       :label="searchLabel"
     >
       <template v-slot:append-outer>
-        <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
+        <v-btn
+          v-if="blobUrl"
+          v-on:click="destroyTorrent"
+          :download="blobName"
+          :href="blobUrl"
+          icon
+          color="green"
+        >
           <v-icon>mdi-download</v-icon>
         </v-btn>
       </template>
@@ -24,7 +31,7 @@
 import TorrentMixin from "../mixins/torrents.js";
 export default {
   name: "SearchBox",
-  props: ["books", "torrents"],
+  props: ["books", "torrents", "client"],
   mixins: [TorrentMixin],
   computed: {
     searchLabel: function() {
@@ -37,25 +44,35 @@ export default {
       return label;
     },
     loading: function() {
+      if (this.downloading) {
+        return true;
+      }
       return this.books.length == 0 && this.torrents.length != 0;
     }
   },
   data: function() {
     return {
+      downloading: false,
       value: "",
       blobName: "",
+      fullTorrent: false,
       blobUrl: false
     };
   },
   methods: {
-    selectedItem: function() {
-      this.loading = true;
-      this.blobUrl = false;
-      this.blobName = this.value.file.path;
-      this.value.file.getBlobURL((_, url) => {
-        this.blobUrl = url;
-        this.loading = false;
-      });
+    destroyTorrent: function() {
+      this.client.get(this.fullTorrent).destroy();
+    },
+    selectedItem: async function() {
+      this.downloading = true;
+      this.fullTorrent = this.value.fullTorrent;
+      this.blobUrl = await this.getTorrentFile(
+        this.client,
+        this.value.fullTorrent,
+        this.value.filePath
+      );
+      this.blobName = this.value.downloadName;
+      this.downloading = false;
     }
   }
 };

@@ -93,9 +93,9 @@ lists on gist.
 
 For that matter, it uses the following libraries:
 
-- [WebTorrent](webtorrent.io)
+- [WebTorrent](https://webtorrent.io)
 - [Axios](https://github.com/axios/axios)
-- [VueJS](vuejs.org)
-- [VuetifyJS](vuetifyjs.com/)
+- [VueJS](https://vuejs.org)
+- [VuetifyJS](https://vuetifyjs.com/)
 
 

@@ -4,12 +4,17 @@
       <v-col cols="1" offset="11">
         <v-bottom-sheet v-model="showSettings" persistent>
           <template v-slot:activator="{ on }">
-            <v-btn icon dark v-on="on">
+            <v-btn class="mt-2" icon dark v-on="on">
               <v-icon>mdi-cog</v-icon>
             </v-btn>
           </template>
           <v-sheet class="text-center">
-            <v-btn class="mt-6" text color="error" @click="showSettings = !showSettings">close</v-btn>
+            <v-btn
+              class="mt-6 col-md-offset-7 col-md-1"
+              text
+              color="error"
+              @click="showSettings = !showSettings"
+            >close</v-btn>
             <Settings
               v-if="showSettings"
               v-on:torrentDeleted="torrentDeleted"
@@ -46,18 +51,30 @@
             <v-icon>mdi-cog</v-icon>) button to add custom torrent book sources.
           </v-alert>
         </v-row>
+        <v-row>
+          <v-alert outlined type="success" class="mt-12 col-md-6 offset-md-3">
+            <b>Be patient!</b>
+            <br />On big torrents it can take quite a while to load.
+            <br />
+            <v-divider class="mt-3 mb-3"></v-divider>If you want to
+            <b>contribute</b> on the torrents you're using, and want it to go a little faster, keep
+            this window open and activate the
+            <b>"Seeding"</b> option on the settings view 
+            <br />
+          </v-alert>
+        </v-row>
         <v-divider class="mt-12 mb-12"></v-divider>
 
         <v-row>
           <v-col cols="3">
             <v-row>
-              <v-col cols="2">Share</v-col>
+              <v-col v-if="link" cols="2">Share</v-col>
               <v-col cols="9">
                 <p class="link-overflow text-centered">
                   <a :href="link">{{link}}</a>
                 </p>
               </v-col>
-              <v-col cols="1">
+              <v-col cols="1" v-if="link">
                 <v-btn icon>
                   <v-icon class="middle_icon" size="large">mdi-clipboard-text</v-icon>
                 </v-btn>
@@ -79,7 +96,7 @@
             <a href="https://github.com/XayOn/aksum">
               <i class="large-gh fab fa-github"></i>
               <br />
-              <p class>Fork me on github</p>
+              <p class>Star me on github</p>
             </a>
           </v-col>
 

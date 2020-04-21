@@ -3,7 +3,7 @@ Append source
 -->
 <template>
   <v-container>
-    <h2 class="text-center">Edit book sources (Torrent links)</h2>
+    <h2 class="text-center">Book sources (Magnet links)</h2>
 
     <v-text-field
       v-model="torrent_uri"
@@ -28,7 +28,9 @@ Append source
       color="red lighten-2"
       dark
     >Delete selected torrents</v-btn>
-    <v-divider></v-divider>
+    <v-divider class="mt-10 mb-10"></v-divider>
+    <h2>Advanced settings</h2>
+    <v-switch v-model="seed" label="Keep seeding"></v-switch>
   </v-container>
 </template>
 
@@ -37,9 +39,17 @@ import TorrentMixin from "../mixins/torrents.js";
 export default {
   name: "Settings",
   mixins: [TorrentMixin],
+  watch: {
+    seed: {
+      handler() {
+        localStorage.seed = this.seed;
+      }
+    }
+  },
   data: function() {
     return {
       display: false,
+      seed: JSON.parse(localStorage?.seed ? localStorage.seed : "false"),
       torrent_uri: "",
       torrent_list: JSON.parse(
         localStorage.torrent_list ? localStorage.torrent_list : "[]"
@@ -56,10 +66,10 @@ export default {
     AddSource: async function() {
       this.loading = true;
       let added_torrent = this.addTorrent(this.torrent_list, this.torrent_uri);
-        if (added_torrent) {
-      this.torrent_list = [...this.torrent_list, added_torrent];
-      this.$emit("torrentAdded", added_torrent);
-        }
+      if (added_torrent) {
+        this.torrent_list = [...this.torrent_list, added_torrent];
+        this.$emit("torrentAdded", added_torrent);
+      }
       this.torrent_uri = "";
       this.loading = false;
     },

@@ -23,13 +23,26 @@ export default {
 
             parsed['tr'].push('wss://tracker.openwebtorrent.com/')
 
-            for (let ctorrent of client.torrents) {
-                if (ctorrent.xt == parsed.xt) {
-                    ctorrent.destroy()
+            if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
+                for (let ctorrent of client.torrents) {
+                    if (ctorrent.xt == parsed.xt) {
+                        ctorrent.destroy()
+                    }
                 }
-            }
 
-            client.add(magnet.encode(parsed), torrent => {
+                client.add(magnet.encode(parsed), torrent => {
+                    for (let file of torrent.files) {
+                        if (file.path == filePath) {
+                            file.getBlobURL((err, url) => {
+                                // TODO: handle errors
+                                console.log(err)
+                                return resolveFunc(url);
+                            })
+                        }
+                    }
+                })
+            } else {
+                let torrent = client.get(`magnet:?xt=${parsed.xt}`)
                 for (let file of torrent.files) {
                     if (file.path == filePath) {
                         file.getBlobURL((err, url) => {
@@ -39,7 +52,7 @@ export default {
                         })
                     }
                 }
-            })
+            }
             return result;
         },
         getTorrentFiles: function (client, torrentOrigin, torrentList) {
@@ -58,7 +71,9 @@ export default {
                         });
                     }
                 }
-                torrent.destroy()
+                if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
+                    torrent.destroy()
+                }
             });
         },
         addTorrent: (list, torrent_origin) => {

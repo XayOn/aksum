@@ -86,7 +86,7 @@
           <v-col cols="3" class="text-center mt-4" offset="2">
             <p>
               This site is hosted on
-              <a href="https://pages.github.com/">github pages</a>. It does not host or endorse any illegal content. 
+              <a href="https://pages.github.com/">github pages</a>. It does not host or endorse any illegal content.
               <br />Examples provided on the official documentation provide a torrent of free, legal books wich hold
               <b>no copyright</b>
             </p>
@@ -143,7 +143,6 @@ export default {
     };
   },
   async created() {
-      window.client = this.client;
     this.$vuetify.theme.dark = true;
     for (let url of this.getFromBTData(this.query_string["btdata"])) {
       this.addTorrent(this.torrentUrls(), url);

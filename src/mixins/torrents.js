@@ -19,6 +19,14 @@ export default {
             let result = new Promise(function (resolve) {
                 resolveFunc = resolve;
             })
+            let parsed = magnet.parse(fullTorrent);
+
+            for (let ctorrent of client.torrents) {
+                if (ctorrent.xt == parsed.xt) {
+                    ctorrent.remove()
+                }
+            }
+
             client.add(fullTorrent, torrent => {
                 for (let file of torrent.files) {
                     if (file.path == filePath) {
@@ -52,7 +60,9 @@ export default {
             });
         },
         addTorrent: (list, torrent_origin) => {
-            if (!list.some(a => a.torrent == torrent_origin)) {
+            let bthi = magnet.decode(torrent_origin).xt
+            console.log(list)
+            if (!list.some(a => a?.decoded?.xt == bthi)) {
                 let decoded = magnet.decode(torrent_origin)
                 decoded['tr'].push('wss://tracker.openwebtorrent.com')
                 let new_torrent = {decoded: decoded, torrent: torrent_origin};

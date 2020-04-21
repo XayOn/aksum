@@ -11,7 +11,7 @@ It allows you to download specific books from webtorrents.
   <a href="#tecnology">Tecnology</a> •
 </p>
 
-You can see it in action, with an open (copyright free) book torrent [here](http://davidfrancos.net/aksum/?gist=XayOn_cbfd322b2e77fe01c206d8039d892e84_0afac922b24bc3c069db814654b470523df85dad)
+You can see it in action, with an open (copyright free) book torrent [here](http://davidfrancos.net/aksum/?btdata=1edc4805fc5121d29be52a9519b6bc22ea12759b:bGlicm9zIGxpYnJlcw==)
 
 ![Screenshot](https://raw.githubusercontent.com/xayon/aksum/master/screenshot.png "Screenshot")
 
@@ -24,28 +24,21 @@ AKSUM is:
 
 ## How to use
 
-To use AKSUM, if you've received it with a gist link, just search on the books
+To use AKSUM, if you've received it with a btdata link, just search on the books
 bar for any book / author. After selecting one, you'll see a download button to
 get your ebook. 
 
 ### Advanced
 
-#### GITHUB gist lists
-
-You can create your own github gist lists.
-Just create a gist with one torrent per line with the book-sources you want.
-Note that the torrent must directly have the books, no compressed files are
-supported. Subfolders are supported. 
-
-To use the newly created gist, just access to AKSUM preferences pannel (the
-gear icon top-right) and add it on the "github gist" textfield. Pressing the
-"+" symbol or enter will redirect you to a permanent link for AKSUM with that
-gist's torrents. You can share that URL.
-
-#### Manual torrent
+#### Adding torrents 
 
 On the preferences page, you can find a torrent input, adding a torrent there
 will store it in your browser, and only you will be able to see its books.
+
+#### Sharing torrent urls 
+
+You can share your torrent list, just use the "share" link after you've added your torrents
+
 
 
 #### Seeding

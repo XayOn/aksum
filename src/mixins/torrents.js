@@ -19,7 +19,7 @@ export default {
             let result = new Promise(function (resolve) {
                 resolveFunc = resolve;
             })
-            let parsed = magnet.parse(fullTorrent);
+            let parsed = magnet.decode(fullTorrent);
 
             for (let ctorrent of client.torrents) {
                 if (ctorrent.xt == parsed.xt) {

@@ -18,7 +18,7 @@ function* getFromBTData(data) {
 function exportToBTData(magnet_urls) {
     let result = "";
     for (let magnetlink of magnet_urls) {
-        result += `${magnetlink.decoded["xt"].split(':')[2]}:${btoa(magnetlink.decoded["dn"])}`;
+        result += `${magnetlink.decoded["xt"].split(':')[2]}:${btoa(magnetlink.decoded["dn"])};`;
     }
     return result
 }

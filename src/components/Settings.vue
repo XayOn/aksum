@@ -3,16 +3,7 @@ Append source
 -->
 <template>
   <v-container>
-    <h2 class="text-center">Edit book sources (Torrent links)</h2>
-
-    <v-text-field
-      v-model="gist_uri"
-      @keydown.enter="AddSourceGist"
-      @click:append-outer="AddSourceGist"
-      append-outer-icon="mdi-plus"
-      placeholder="Github GIST url containing one magnet per line"
-      single-line
-    ></v-text-field>
+    <h2 class="text-center">Book sources (Magnet links)</h2>
 
     <v-text-field
       v-model="torrent_uri"
@@ -37,6 +28,9 @@ Append source
       color="red lighten-2"
       dark
     >Delete selected torrents</v-btn>
+    <v-divider class="mt-10 mb-10"></v-divider>
+    <h2>Advanced settings</h2>
+    <v-switch v-model="seed" label="Keep seeding"></v-switch>
   </v-container>
 </template>
 
@@ -45,10 +39,17 @@ import TorrentMixin from "../mixins/torrents.js";
 export default {
   name: "Settings",
   mixins: [TorrentMixin],
+  watch: {
+    seed: {
+      handler() {
+        localStorage.seed = this.seed;
+      }
+    }
+  },
   data: function() {
     return {
       display: false,
-      gist_uri: "",
+      seed: JSON.parse(localStorage?.seed ? localStorage.seed : "false"),
       torrent_uri: "",
       torrent_list: JSON.parse(
         localStorage.torrent_list ? localStorage.torrent_list : "[]"
@@ -62,17 +63,13 @@ export default {
     };
   },
   methods: {
-    AddSourceGist: function() {
-      let split = this.gist_uri.split("/");
-      let searchParams = new URLSearchParams(window.location.search);
-      searchParams.set("gist", `${split[3]}_${split[4]}_${split[6]}`);
-      window.location.search = searchParams.toString();
-    },
     AddSource: async function() {
       this.loading = true;
       let added_torrent = this.addTorrent(this.torrent_list, this.torrent_uri);
-      this.torrent_list = [...this.torrent_list, added_torrent];
-      this.$emit("torrentAdded", added_torrent);
+      if (added_torrent) {
+        this.torrent_list = [...this.torrent_list, added_torrent];
+        this.$emit("torrentAdded", added_torrent);
+      }
       this.torrent_uri = "";
       this.loading = false;
     },

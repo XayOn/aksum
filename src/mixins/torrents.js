@@ -19,7 +19,30 @@ export default {
             let result = new Promise(function (resolve) {
                 resolveFunc = resolve;
             })
-            client.add(fullTorrent, torrent => {
+            let parsed = magnet.decode(fullTorrent);
+
+            parsed['tr'].push('wss://tracker.openwebtorrent.com/')
+
+            if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
+                for (let ctorrent of client.torrents) {
+                    if (ctorrent.xt == parsed.xt) {
+                        ctorrent.destroy()
+                    }
+                }
+
+                client.add(magnet.encode(parsed), torrent => {
+                    for (let file of torrent.files) {
+                        if (file.path == filePath) {
+                            file.getBlobURL((err, url) => {
+                                // TODO: handle errors
+                                console.log(err)
+                                return resolveFunc(url);
+                            })
+                        }
+                    }
+                })
+            } else {
+                let torrent = client.get(`magnet:?xt=${parsed.xt}`)
                 for (let file of torrent.files) {
                     if (file.path == filePath) {
                         file.getBlobURL((err, url) => {
@@ -29,7 +52,7 @@ export default {
                         })
                     }
                 }
-            })
+            }
             return result;
         },
         getTorrentFiles: function (client, torrentOrigin, torrentList) {
@@ -48,13 +71,16 @@ export default {
                         });
                     }
                 }
-                torrent.destroy()
+                if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
+                    torrent.destroy()
+                }
             });
         },
         addTorrent: (list, torrent_origin) => {
-            if (!list.some(a => a.torrent == torrent_origin)) {
+            let bthi = magnet.decode(torrent_origin).xt
+            if (!list.some(a => a?.decoded?.xt == bthi)) {
                 let decoded = magnet.decode(torrent_origin)
-                decoded['tr'].push('wss://tracker.openwebtorrent.com')
+                decoded['tr'].push('wss://tracker.openwebtorrent.com/')
                 let new_torrent = {decoded: decoded, torrent: torrent_origin};
                 localStorage.torrent_list = JSON.stringify([...list, new_torrent]);
                 return new_torrent

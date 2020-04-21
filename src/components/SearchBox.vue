@@ -61,7 +61,9 @@ export default {
   },
   methods: {
     destroyTorrent: function() {
+        if (!this.localStorage.seed) {
       this.client.get(this.fullTorrent).destroy();
+        }
     },
     selectedItem: async function() {
         this.blobUrl = false;

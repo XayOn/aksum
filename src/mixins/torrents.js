@@ -8,14 +8,15 @@ const EBOOK_EXTENSIONS = [
 ];
 
 export default {
-    data: function(){
-        return {seed_enabled: JSON.parse(localStorage?.seed ? localStorage.seed : "false")
+    data: function () {
+        return {
+            seed_enabled: JSON.parse(localStorage?.seed ? localStorage.seed : "false")
         }
     },
     methods: {
         disableTorrentIfNeeded: function (torrent) {
             if (!this.seed_enabled) {
-                console.log("Seeding not selected, deselecting all files")
+                torrent.pause()
                 torrent.deselect(0, torrent.pieces.length - 1, false)
                 for (let file of torrent.files) {
                     file.deselect()
@@ -39,20 +40,25 @@ export default {
             let file = torrent.files.find((file) => {
                 return file.path == filePath
             });
+            torrent.resume()
 
             file.getBlobURL((err, url) => {
-                this.disableTorrentIfNeeded(torrent)
-                // TODO: handle errors
                 console.log(err)
-                // torrent.destroy()
+                this.disableTorrentIfNeeded(torrent)
                 return resolveFunc(url);
             })
             return result;
         },
-        getTorrentFiles: function (client, torrentOrigin, torrentList) {
+        getTorrentFiles: function (client, torrentOrigin) {
             let parsed = magnet.encode(torrentOrigin.decoded);
+
+            let resolveFunc = null;
+            let result = new Promise(function (resolve) {
+                resolveFunc = resolve;
+            })
             client.add(parsed, torrent => {
                 this.disableTorrentIfNeeded(torrent)
+                let torrentList = []
 
                 for (let file of torrent.files) {
                     let parsedPath = parsePath(file.path);
@@ -67,7 +73,9 @@ export default {
                         });
                     }
                 }
+                resolveFunc(torrentList)
             });
+            return result
         },
         addTorrent: (list, torrent_origin) => {
             let bthi = magnet.decode(torrent_origin).xt

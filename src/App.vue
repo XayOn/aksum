@@ -4,7 +4,7 @@
       <v-col cols="1" offset="11">
         <v-bottom-sheet v-model="showSettings" persistent>
           <template v-slot:activator="{ on }">
-            <v-btn class="mt-2" icon dark v-on="on">
+            <v-btn class="mt-2" icon :dark="dark" v-on="on">
               <v-icon>mdi-cog</v-icon>
             </v-btn>
           </template>
@@ -37,7 +37,7 @@
         </v-row>
         <v-row>
           <p
-            class="text-center col-md-6 offset-md-3 display-3"
+            class="text-center col-md-6 offset-md-3 display-1"
           >Search and download books from torrents, directly from your browser</p>
         </v-row>
         <v-row>
@@ -50,13 +50,6 @@
           />
         </v-row>
 
-        <v-row>
-          <v-alert outlined type="info" class="mt-12 col-md-4 offset-md-4">
-            Tip: ¿Can't find a book?
-            <br />Try the settings (
-            <v-icon>mdi-cog</v-icon>) button to add custom torrent book sources.
-          </v-alert>
-        </v-row>
         <v-row>
           <v-alert outlined type="success" class="mt-12 col-md-6 offset-md-3">
             <b>Be patient!</b>
@@ -73,47 +66,66 @@
 
         <v-row>
           <v-col cols="3">
-            <v-row>
-              <v-col v-if="link" cols="2">Share</v-col>
-              <v-col cols="9">
-                <p class="link-overflow text-centered">
-                  <a :href="link">{{link}}</a>
-                </p>
-              </v-col>
-              <v-col cols="1" v-if="link">
-                <v-btn icon>
-                  <v-icon class="middle_icon" size="large">mdi-clipboard-text</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <p class="justify-content">
-                  Made with
-                  <v-icon class="large-love">mdi-heart</v-icon>&nbsp;by
-                  <a href="https://davidfrancos.net">David Francos</a>
-                  to the world
-                </p>
-                <p>{{uploadSpeed}} {{downloadSpeed}} {{progress}}</p>
-              </v-col>
-            </v-row>
+            <v-card class="mx-auto" tile>
+              <v-list flat>
+                <v-subheader>LINKS</v-subheader>
+                <v-list-item-group v-model="selectedLink" color="primary">
+                  <v-list-item v-for="(item, i) in links" :key="i">
+                    <v-list-item-icon v-if="item.text">
+                      <v-icon v-text="item.icon"></v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content v-if="item.text">
+                      <v-list-item-title v-text="item.text"></v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
           </v-col>
 
-          <v-col cols="2" class="text-center mt-4" offset="2">
-            <a href="https://github.com/XayOn/aksum">
-              <i class="large-gh fab fa-github"></i>
-              <br />
-              <p class>Star me on github</p>
-            </a>
-          </v-col>
-
-          <v-col cols="3" class="text-center mt-4" offset="2">
+          <v-col cols="4" class="text-center mt-4" offset="1">
             <p>
               This site is hosted on
               <a href="https://pages.github.com/">github pages</a>. It does not host or endorse any illegal content.
               <br />Examples provided on the official documentation provide a torrent of free, legal books wich hold
               <b>no copyright</b>
             </p>
+          </v-col>
+
+          <v-col cols="3" offset="1">
+            <v-card class="mx-auto" tile>
+              <v-list disabled>
+                <v-subheader>STATUS</v-subheader>
+                <v-list-item-group color="primary">
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon>mdi-cog</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{status}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon>mdi-database</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{progress}} %</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon>mdi-speedometer</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{downloadSpeed}}/{{uploadSpeed}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
@@ -143,13 +155,35 @@ export default {
         return window.location.href.split("?")[0] + "?btdata=" + btlink;
       }
       return "";
+    },
+    dark: function() {
+      return JSON.parse(localStorage?.dark ? localStorage.dark : "true");
+    },
+    links: function() {
+      return [
+        {
+          href: "http://davidfrancos.net",
+          icon: "mdi-home",
+          text: "Made with ♡ by davidfrancos"
+        },
+        {
+          href: "https://github.com/XayOn/aksum",
+          text: "Star me on github",
+          icon: "fa-github"
+        },
+        {
+          href: this.link,
+          text: this.link,
+          icon: "mdi-share-variant"
+        }
+      ];
     }
   },
   methods: {
     fileDownloaded: function() {
-      this.downloadSpeed = this.client.downloadSpeed;
-      this.uploadSpeed = this.client.uploadSpeed;
-      this.progress = this.client.progress;
+      this.downloadSpeed = 0;
+      this.uploadSpeed = 0;
+      this.status = "Ready";
     },
     torrentDeleted: async function(item) {
       this.torrents = this.torrentUrls();
@@ -158,15 +192,20 @@ export default {
       );
     },
 
-    torrentAdded: function(item) {
-      this.getTorrentFiles(this.client, item, this.books);
+    torrentAdded: async function(item) {
+      this.status = "Loading metadata";
+      this.books.push(...(await this.getTorrentFiles(this.client, item)));
+      this.status = "Ready";
       this.torrents = this.torrentUrls();
     }
   },
   data: function() {
     return {
+      selectedLink: false,
       torrents: [],
+      status: "Ready",
       books: [],
+      dialog: false,
       downloadSpeed: 0,
       uploadSpeed: 0,
       progress: 0,
@@ -174,25 +213,35 @@ export default {
       client: new WebTorrent()
     };
   },
+  watch: {
+    selectedLink: {
+      handler() {
+        window.location.href = this.links[this.selectedLink].href;
+      }
+    }
+  },
   async created() {
+    window.client = this.client;
 
-                window.client = this.client;
     this.client.on("download", () => {
-      this.downloadSpeed = this.client.downloadSpeed;
-      this.uploadSpeed = this.client.uploadSpeed;
-      this.progress = this.client.progress;
+      this.status = "Downloading";
+      this.downloadSpeed = (this.client.downloadSpeed / 1024).toFixed(2);
+      this.uploadSpeed = (this.client.uploadSpeed / 1024).toFixed(2);
+      this.progress = (this.client.progress * 100).toFixed(2);
     });
 
-      this.client.on('noPeers', function (announceType) {console.log(`No peers for ${announceType}`)})
+    this.client.on("noPeers", function(announceType) {
+      console.log(`No peers for ${announceType}`);
+    });
 
-    this.$vuetify.theme.dark = true;
+    this.$vuetify.theme.dark = this.dark;
     for (let url of this.getFromBTData(this.query_string["btdata"])) {
       this.addTorrent(this.torrentUrls(), url);
     }
     this.torrents = this.torrentUrls();
 
     for (let item of this.torrentUrls()) {
-      this.torrentAdded(item);
+      await this.torrentAdded(item);
     }
   }
 };
@@ -215,7 +264,7 @@ export default {
   font-size: 2em;
 }
 .large-gh {
-  font-size: 4em;
+  font-size: 1.5em;
 }
 .justify-content {
   text-align: justify;

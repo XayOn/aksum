@@ -26,11 +26,12 @@ Append source
       @click="deleteSources"
       :disabled="this.selected.length == 0"
       color="red lighten-2"
-      dark
+      :dark="cdark"
     >Delete selected torrents</v-btn>
     <v-divider class="mt-10 mb-10"></v-divider>
     <h2>Advanced settings</h2>
     <v-switch v-model="seed" label="Keep seeding"></v-switch>
+    <v-switch v-model="dark" label="Enable dark theme"></v-switch>
   </v-container>
 </template>
 
@@ -44,10 +45,22 @@ export default {
       handler() {
         localStorage.seed = this.seed;
       }
+    },
+    dark: {
+      handler() {
+        localStorage.dark = this.dark;
+        this.$vuetify.theme.dark = this.dark;
+      }
+    }
+  },
+  computed: {
+    cdark: function() {
+      return JSON.parse(localStorage?.dark ? localStorage.dark : "true");
     }
   },
   data: function() {
     return {
+      dark: JSON.parse(localStorage?.dark ? localStorage.dark : "true"),
       display: false,
       seed: JSON.parse(localStorage?.seed ? localStorage.seed : "false"),
       torrent_uri: "",

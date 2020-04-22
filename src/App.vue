@@ -65,7 +65,7 @@
         <v-divider class="mt-12 mb-12"></v-divider>
 
         <v-row>
-          <v-col cols="3">
+          <v-col sm="3" cols="12">
             <v-card class="mx-auto" tile>
               <v-list flat>
                 <v-subheader>LINKS</v-subheader>
@@ -83,7 +83,7 @@
             </v-card>
           </v-col>
 
-          <v-col cols="4" class="text-center mt-4" offset="1">
+          <v-col cols="12" sm="4" class="text-center mt-4" offset-md="1">
             <p>
               This site is hosted on
               <a href="https://pages.github.com/">github pages</a>. It does not host or endorse any illegal content.
@@ -92,7 +92,7 @@
             </p>
           </v-col>
 
-          <v-col cols="3" offset="1">
+          <v-col cols="12" sm="3" offset-md="1">
             <v-card class="mx-auto" tile>
               <v-list disabled>
                 <v-subheader>STATUS</v-subheader>

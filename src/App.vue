@@ -41,7 +41,13 @@
           >Search and download books from torrents, directly from your browser</p>
         </v-row>
         <v-row>
-          <SearchBox v-if="!showSettings" :client="client" :torrents="torrents" :books="books" />
+          <SearchBox
+            v-if="!showSettings"
+            :client="client"
+            v-on:fileDownloaded="fileDownloaded"
+            :torrents="torrents"
+            :books="books"
+          />
         </v-row>
 
         <v-row>
@@ -59,7 +65,7 @@
             <v-divider class="mt-3 mb-3"></v-divider>If you want to
             <b>contribute</b> on the torrents you're using, and want it to go a little faster, keep
             this window open and activate the
-            <b>"Seeding"</b> option on the settings view 
+            <b>"Seeding"</b> option on the settings view
             <br />
           </v-alert>
         </v-row>
@@ -88,6 +94,7 @@
                   <a href="https://davidfrancos.net">David Francos</a>
                   to the world
                 </p>
+                <p>{{uploadSpeed}} {{downloadSpeed}} {{progress}}</p>
               </v-col>
             </v-row>
           </v-col>
@@ -139,6 +146,11 @@ export default {
     }
   },
   methods: {
+    fileDownloaded: function() {
+      this.downloadSpeed = this.client.downloadSpeed;
+      this.uploadSpeed = this.client.uploadSpeed;
+      this.progress = this.client.progress;
+    },
     torrentDeleted: async function(item) {
       this.torrents = this.torrentUrls();
       this.books = this.books.filter(
@@ -155,11 +167,24 @@ export default {
     return {
       torrents: [],
       books: [],
+      downloadSpeed: 0,
+      uploadSpeed: 0,
+      progress: 0,
       showSettings: false,
       client: new WebTorrent()
     };
   },
   async created() {
+
+                window.client = this.client;
+    this.client.on("download", () => {
+      this.downloadSpeed = this.client.downloadSpeed;
+      this.uploadSpeed = this.client.uploadSpeed;
+      this.progress = this.client.progress;
+    });
+
+      this.client.on('noPeers', function (announceType) {console.log(`No peers for ${announceType}`)})
+
     this.$vuetify.theme.dark = true;
     for (let url of this.getFromBTData(this.query_string["btdata"])) {
       this.addTorrent(this.torrentUrls(), url);

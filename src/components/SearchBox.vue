@@ -12,14 +12,7 @@
       :label="searchLabel"
     >
       <template v-slot:append-outer>
-        <v-btn
-          v-if="blobUrl"
-          v-on:click="destroyTorrent"
-          :download="blobName"
-          :href="blobUrl"
-          icon
-          color="green"
-        >
+        <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
           <v-icon>mdi-download</v-icon>
         </v-btn>
       </template>
@@ -60,13 +53,8 @@ export default {
     };
   },
   methods: {
-    destroyTorrent: function() {
-        if (!this.localStorage.seed) {
-      this.client.get(this.fullTorrent).destroy();
-        }
-    },
     selectedItem: async function() {
-        this.blobUrl = false;
+      this.blobUrl = false;
       this.downloading = true;
       this.fullTorrent = this.value.fullTorrent;
       this.blobUrl = await this.getTorrentFile(
@@ -74,6 +62,7 @@ export default {
         this.value.fullTorrent,
         this.value.filePath
       );
+      this.$emit("fileDownloaded");
       this.blobName = this.value.downloadName;
       this.downloading = false;
     }

@@ -8,7 +8,20 @@ const EBOOK_EXTENSIONS = [
 ];
 
 export default {
+    data: function(){
+        return {seed_enabled: JSON.parse(localStorage?.seed ? localStorage.seed : "false")
+        }
+    },
     methods: {
+        disableTorrentIfNeeded: function (torrent) {
+            if (!this.seed_enabled) {
+                console.log("Seeding not selected, deselecting all files")
+                torrent.deselect(0, torrent.pieces.length - 1, false)
+                for (let file of torrent.files) {
+                    file.deselect()
+                }
+            }
+        },
         torrentUrls: function () {
             return localStorage.torrent_list
                 ? JSON.parse(localStorage.torrent_list)
@@ -22,42 +35,25 @@ export default {
             let parsed = magnet.decode(fullTorrent);
 
             parsed['tr'].push('wss://tracker.openwebtorrent.com/')
+            let torrent = client.get(parsed.infoHash)
+            let file = torrent.files.find((file) => {
+                return file.path == filePath
+            });
 
-            if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
-                for (let ctorrent of client.torrents) {
-                    if (ctorrent.xt == parsed.xt) {
-                        ctorrent.destroy()
-                    }
-                }
-
-                client.add(magnet.encode(parsed), torrent => {
-                    for (let file of torrent.files) {
-                        if (file.path == filePath) {
-                            file.getBlobURL((err, url) => {
-                                // TODO: handle errors
-                                console.log(err)
-                                return resolveFunc(url);
-                            })
-                        }
-                    }
-                })
-            } else {
-                let torrent = client.get(`magnet:?xt=${parsed.xt}`)
-                for (let file of torrent.files) {
-                    if (file.path == filePath) {
-                        file.getBlobURL((err, url) => {
-                            // TODO: handle errors
-                            console.log(err)
-                            return resolveFunc(url);
-                        })
-                    }
-                }
-            }
+            file.getBlobURL((err, url) => {
+                this.disableTorrentIfNeeded(torrent)
+                // TODO: handle errors
+                console.log(err)
+                // torrent.destroy()
+                return resolveFunc(url);
+            })
             return result;
         },
         getTorrentFiles: function (client, torrentOrigin, torrentList) {
             let parsed = magnet.encode(torrentOrigin.decoded);
             client.add(parsed, torrent => {
+                this.disableTorrentIfNeeded(torrent)
+
                 for (let file of torrent.files) {
                     let parsedPath = parsePath(file.path);
                     let ext = parsedPath.ext.substring(1);
@@ -70,9 +66,6 @@ export default {
                             fullTorrent: torrentOrigin.torrent
                         });
                     }
-                }
-                if (!JSON.parse(localStorage?.seed ? localStorage.seed : "false")) {
-                    torrent.destroy()
                 }
             });
         },

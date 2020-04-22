@@ -13,7 +13,7 @@ It allows you to download specific books from webtorrents.
 
 You can see it in action, with an open (copyright free) book torrent [here](http://davidfrancos.net/aksum/?btdata=1edc4805fc5121d29be52a9519b6bc22ea12759b:bGlicm9zIGxpYnJlcw==)
 
-![Screenshot](https://raw.githubusercontent.com/xayon/aksum/master/screenshot.png "Screenshot")
+![Screenshot](screenshot.gif "Screenshot")
 
 ## Features
 AKSUM is:

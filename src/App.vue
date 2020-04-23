@@ -44,6 +44,8 @@
           <SearchBox
             v-if="!showSettings"
             :client="client"
+            v-on:torrentAdded="torrentAdded"
+            v-on:categoryChanged="categoryChanged"
             v-on:fileDownloaded="fileDownloaded"
             :torrents="torrents"
             :books="books"
@@ -123,6 +125,15 @@
                       <v-list-item-title>{{downloadSpeed}}/{{uploadSpeed}}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <v-list-item>
+                    <v-list-item-icon>
+                      <v-icon>mdi-account</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                      <v-list-item-title>{{peers}}</v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
                 </v-list-item-group>
               </v-list>
             </v-card>
@@ -156,8 +167,18 @@ export default {
       }
       return "";
     },
+    peers: function() {
+      let total = 0;
+      for (let torrent of this.client.torrents) {
+        total += torrent.numPeers;
+      }
+      return total;
+    },
     dark: function() {
       return JSON.parse(localStorage?.dark ? localStorage.dark : "true");
+    },
+    categories: function() {
+      return this.torrents.map(a => a.category);
     },
     links: function() {
       return [
@@ -180,6 +201,9 @@ export default {
     }
   },
   methods: {
+    categoryChanged: function() {
+      this.books = [];
+    },
     fileDownloaded: function() {
       this.downloadSpeed = 0;
       this.uploadSpeed = 0;
@@ -202,6 +226,7 @@ export default {
   data: function() {
     return {
       selectedLink: false,
+      selectedCategory: false,
       torrents: [],
       status: "Ready",
       books: [],
@@ -236,12 +261,14 @@ export default {
 
     this.$vuetify.theme.dark = this.dark;
     for (let url of this.getFromBTData(this.query_string["btdata"])) {
-      this.addTorrent(this.torrentUrls(), url);
+      this.addTorrent(this.torrentUrls(), url.magnet, url.category);
     }
     this.torrents = this.torrentUrls();
 
     for (let item of this.torrentUrls()) {
-      await this.torrentAdded(item);
+      if (this.categories.lenght == 1) {
+        await this.torrentAdded(item);
+      }
     }
   }
 };

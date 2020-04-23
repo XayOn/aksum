@@ -43,7 +43,6 @@ export default {
             torrent.resume()
 
             file.getBlobURL((err, url) => {
-                console.log(err)
                 this.disableTorrentIfNeeded(torrent)
                 return resolveFunc(url);
             })
@@ -77,12 +76,16 @@ export default {
             });
             return result
         },
-        addTorrent: (list, torrent_origin) => {
-            let bthi = magnet.decode(torrent_origin).xt
+        addTorrent: (list, torrentOrigin, category) => {
+            let bthi = magnet.decode(torrentOrigin).xt
             if (!list.some(a => a?.decoded?.xt == bthi)) {
-                let decoded = magnet.decode(torrent_origin)
+                let decoded = magnet.decode(torrentOrigin)
                 decoded['tr'].push('wss://tracker.openwebtorrent.com/')
-                let new_torrent = {decoded: decoded, torrent: torrent_origin};
+                let new_torrent = {
+                    category: category,
+                    decoded: decoded,
+                    torrent: torrentOrigin
+                };
                 localStorage.torrent_list = JSON.stringify([...list, new_torrent]);
                 return new_torrent
             }

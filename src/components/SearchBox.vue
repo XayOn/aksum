@@ -1,22 +1,35 @@
 <template>
   <v-container>
-    <v-autocomplete
-      :items="books"
-      item-key="label_name"
-      color="white"
-      item-text="label_name"
-      :return-object="true"
-      v-model="value"
-      :loading="loading"
-      v-on:change="selectedItem"
-      :label="searchLabel"
-    >
-      <template v-slot:append-outer>
-        <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
-          <v-icon>mdi-download</v-icon>
-        </v-btn>
-      </template>
-    </v-autocomplete>
+    <v-row>
+      <v-col cols="12" md="3" offset="1">
+        <v-select
+          v-model="category"
+          :items="categories"
+          menu-props="auto"
+          label="Select category"
+          hide-details
+        ></v-select>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-autocomplete
+          :items="books"
+          item-key="label_name"
+          color="white"
+          item-text="label_name"
+          :return-object="true"
+          v-model="value"
+          :loading="loading"
+          v-on:change="selectedItem"
+          :label="searchLabel"
+        >
+          <template v-slot:append-outer>
+            <v-btn v-if="blobUrl" :download="blobName" :href="blobUrl" icon color="green">
+              <v-icon>mdi-download</v-icon>
+            </v-btn>
+          </template>
+        </v-autocomplete>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -29,8 +42,10 @@ export default {
   computed: {
     searchLabel: function() {
       let label = `Search ${this.books.length} books`;
-      if (this.books.length == 0 && this.torrents.length != 0) {
+      if (this.loading) {
         label = "Loading...";
+      } else if (this.categories.lenght != 1 && !this.category) {
+        label = "Select category first...";
       } else if (this.books.length == 0 && this.torrents.length == 0) {
         label = "No data sources available";
       }
@@ -40,13 +55,37 @@ export default {
       if (this.downloading) {
         return true;
       }
-      return this.books.length == 0 && this.torrents.length != 0;
+      return (
+        (this.books.length == 0 &&
+          this.torrents.length != 0 &&
+          this.categories.lenght == 1) ||
+        (this.books.length == 0 &&
+          this.torrents.length != 0 &&
+          this.categories.lenght != 1 &&
+          this.category != false)
+      );
+    },
+    categories: function() {
+      return this.torrents.map(a => a.category);
+    }
+  },
+  watch: {
+    category: {
+      handler() {
+        this.$emit("categoryChanged");
+        for (let torrent of this.torrents) {
+          if (this.category == torrent.category) {
+            this.$emit("torrentAdded", torrent);
+          }
+        }
+      }
     }
   },
   data: function() {
     return {
       downloading: false,
       value: "",
+      category: false,
       blobName: "",
       fullTorrent: false,
       blobUrl: false

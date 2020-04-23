@@ -3,18 +3,23 @@ Append source
 -->
 <template>
   <v-container>
-    <h2 class="text-center">Book sources (Magnet links)</h2>
-
-    <v-text-field
-      v-model="torrent_uri"
-      @keydown.enter="AddSource"
-      @click:append-outer="AddSource"
-      append-outer-icon="mdi-plus"
-      placeholder="Magnet link"
-      :loading="loading"
-      single-line
-    ></v-text-field>
-
+    <h2 class="text-center">Manage book sources (Magnet links)</h2>
+    <v-row>
+      <v-col cols="12" md="1">
+        <v-text-field label="Category" v-model="category"></v-text-field>
+      </v-col>
+      <v-col cols="12" md="10">
+        <v-text-field
+          v-model="torrent_uri"
+          @keydown.enter="AddSource"
+          @click:append-outer="AddSource"
+          append-outer-icon="mdi-plus"
+          label="Magnet link"
+          placeholder="magnet:?xt=urn:mhi:afffa"
+          :loading="loading"
+        ></v-text-field>
+      </v-col>
+    </v-row>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -60,6 +65,7 @@ export default {
   },
   data: function() {
     return {
+      category: "", 
       dark: JSON.parse(localStorage?.dark ? localStorage.dark : "true"),
       display: false,
       seed: JSON.parse(localStorage?.seed ? localStorage.seed : "false"),
@@ -68,6 +74,7 @@ export default {
         localStorage.torrent_list ? localStorage.torrent_list : "[]"
       ),
       headers: [
+        { text: "category", align: "start", value: "category" },
         { text: "Name", align: "start", value: "decoded.name" },
         { text: "Hash", align: "start", value: "decoded.infoHash" }
       ],
@@ -78,7 +85,11 @@ export default {
   methods: {
     AddSource: async function() {
       this.loading = true;
-      let added_torrent = this.addTorrent(this.torrent_list, this.torrent_uri);
+      let added_torrent = this.addTorrent(
+        this.torrent_list,
+        this.torrent_uri,
+        this.category
+      );
       if (added_torrent) {
         this.torrent_list = [...this.torrent_list, added_torrent];
         this.$emit("torrentAdded", added_torrent);

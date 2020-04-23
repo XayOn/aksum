@@ -4,6 +4,9 @@ function* getFromBTData(data) {
     if (!data) {
         return []
     }
+    if (data.endsWith(';')){
+        data = data.slice(0, -1);
+    }
     let sdata = data.split(';');
     for (let torrent of sdata) {
         torrent = torrent.split(':');

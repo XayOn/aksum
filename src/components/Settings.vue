@@ -3,10 +3,10 @@ Append source
 -->
 <template>
   <v-container>
-    <h2 class="text-center">Manage book sources (Magnet links)</h2>
+    <h2 class="text-center">{{$t('settings_sources_title')}}</h2>
     <v-row>
       <v-col cols="12" md="1">
-        <v-text-field label="Category" v-model="category"></v-text-field>
+        <v-text-field :label="$t('category')" v-model="category"></v-text-field>
       </v-col>
       <v-col cols="12" md="10">
         <v-text-field
@@ -14,7 +14,7 @@ Append source
           @keydown.enter="AddSource"
           @click:append-outer="AddSource"
           append-outer-icon="mdi-plus"
-          label="Magnet link"
+          :label="$t('magnet')"
           placeholder="magnet:?xt=urn:mhi:afffa"
           :loading="loading"
         ></v-text-field>
@@ -32,11 +32,11 @@ Append source
       :disabled="this.selected.length == 0"
       color="red lighten-2"
       :dark="cdark"
-    >Delete selected torrents</v-btn>
+    >{{$t('delete_button')}}</v-btn>
     <v-divider class="mt-10 mb-10"></v-divider>
-    <h2>Advanced settings</h2>
-    <v-switch v-model="seed" label="Keep seeding"></v-switch>
-    <v-switch v-model="dark" label="Enable dark theme"></v-switch>
+    <h2>{{$t('advanced_settings')}}</h2>
+    <v-switch v-model="seed" :label="$t('seed_label')"></v-switch>
+    <v-switch v-model="dark" :label="$t('dark_label')"></v-switch>
   </v-container>
 </template>
 
@@ -65,7 +65,7 @@ export default {
   },
   data: function() {
     return {
-      category: "", 
+      category: "",
       dark: JSON.parse(localStorage?.dark ? localStorage.dark : "true"),
       display: false,
       seed: JSON.parse(localStorage?.seed ? localStorage.seed : "false"),
@@ -74,9 +74,9 @@ export default {
         localStorage.torrent_list ? localStorage.torrent_list : "[]"
       ),
       headers: [
-        { text: "category", align: "start", value: "category" },
-        { text: "Name", align: "start", value: "decoded.name" },
-        { text: "Hash", align: "start", value: "decoded.infoHash" }
+        { text: this.$t("category"), align: "start", value: "category" },
+        { text: this.$t("name"), align: "start", value: "decoded.name" },
+        { text: this.$t("hash"), align: "start", value: "decoded.infoHash" }
       ],
       selected: [],
       loading: false

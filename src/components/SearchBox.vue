@@ -6,7 +6,7 @@
           v-model="category"
           :items="categories"
           menu-props="auto"
-          label="Select category"
+          :label="$t('select_category')"
           hide-details
         ></v-select>
       </v-col>
@@ -41,13 +41,15 @@ export default {
   mixins: [TorrentMixin],
   computed: {
     searchLabel: function() {
-      let label = `Search ${this.books.length} books`;
+      let books = this.$t("books");
+      let search = this.$t("search");
+      let label = `${search} ${this.books.length} ${books}`;
       if (this.loading) {
-        label = "Loading...";
+        label = this.$t("loading");
       } else if (this.categories.lenght != 1 && !this.category) {
-        label = "Select category first...";
+        label = this.$t("select_category_first");
       } else if (this.books.length == 0 && this.torrents.length == 0) {
-        label = "No data sources available";
+        label = this.$t("no_data_sources");
       }
       return label;
     },

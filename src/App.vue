@@ -14,7 +14,7 @@
               text
               color="error"
               @click="showSettings = !showSettings"
-            >close</v-btn>
+            >{{$t('close')}}</v-btn>
             <Settings
               v-if="showSettings"
               v-on:torrentDeleted="torrentDeleted"
@@ -36,9 +36,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <p
-            class="text-center col-md-6 offset-md-3 display-1"
-          >Search and download books from torrents, directly from your browser</p>
+          <p class="text-center col-md-6 offset-md-3 display-1">{{$t('subheader')}}</p>
         </v-row>
         <v-row>
           <SearchBox
@@ -54,13 +52,12 @@
 
         <v-row>
           <v-alert outlined type="success" class="mt-12 col-md-6 offset-md-3">
-            <b>Be patient!</b>
-            <br />On big torrents it can take quite a while to load.
+            <b>{{$t('patient')}}</b>
             <br />
-            <v-divider class="mt-3 mb-3"></v-divider>If you want to
-            <b>contribute</b> on the torrents you're using, and want it to go a little faster, keep
-            this window open and activate the
-            <b>"Seeding"</b> option on the settings view
+            {{$t('patient_subheader')}}
+            <br />
+            <v-divider class="mt-3 mb-3"></v-divider>
+            {{$t('patient_contribute')}}
             <br />
           </v-alert>
         </v-row>
@@ -70,7 +67,7 @@
           <v-col sm="3" cols="12">
             <v-card class="mx-auto" tile>
               <v-list flat>
-                <v-subheader>LINKS</v-subheader>
+                <v-subheader>{{$t('links')}}</v-subheader>
                 <v-list-item-group v-model="selectedLink" color="primary">
                   <v-list-item v-for="(item, i) in links" :key="i">
                     <v-list-item-icon v-if="item.text">
@@ -87,17 +84,19 @@
 
           <v-col cols="12" sm="4" class="text-center mt-4" offset-md="1">
             <p>
-              This site is hosted on
-              <a href="https://pages.github.com/">github pages</a>. It does not host or endorse any illegal content.
-              <br />Examples provided on the official documentation provide a torrent of free, legal books wich hold
-              <b>no copyright</b>
+              {{$t('hosted_on')}}
+              <a href="https://pages.github.com/">github pages</a>
+              .
+              {{$t('hosted_on_endorsed')}}
+              <br />
+              {{$t('hosted_on_example')}}
             </p>
           </v-col>
 
           <v-col cols="12" sm="3" offset-md="1">
             <v-card class="mx-auto" tile>
               <v-list disabled>
-                <v-subheader>STATUS</v-subheader>
+                <v-subheader>{{$t('status_title')}}</v-subheader>
                 <v-list-item-group color="primary">
                   <v-list-item>
                     <v-list-item-icon>
@@ -185,11 +184,11 @@ export default {
         {
           href: "http://davidfrancos.net",
           icon: "mdi-home",
-          text: "Made with ♡ by davidfrancos"
+          text: this.$t("love")
         },
         {
           href: "https://github.com/XayOn/aksum",
-          text: "Star me on github",
+          text: this.$t("star"),
           icon: "fa-github"
         },
         {

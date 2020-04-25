@@ -24,9 +24,10 @@ export default {
             }
         },
         torrentUrls: function () {
-            return localStorage.torrent_list
+            let list = localStorage.torrent_list
                 ? JSON.parse(localStorage.torrent_list)
                 : [];
+            return list.filter((a)=>a.category && a.decoded.xt)
         },
         getTorrentFile: function (client, fullTorrent, filePath) {
             let resolveFunc = null;

@@ -259,8 +259,12 @@ export default {
     });
 
     this.$vuetify.theme.dark = this.dark;
-    for (let url of this.getFromBTData(this.query_string["btdata"])) {
-      this.addTorrent(this.torrentUrls(), url.magnet, url.category);
+    try {
+      for (let url of this.getFromBTData(this.query_string["btdata"])) {
+        this.addTorrent(this.torrentUrls(), url.magnet, url.category);
+      }
+    } catch (err) {
+        console.log(`Could not load url data ${err}`);
     }
     this.torrents = this.torrentUrls();
 

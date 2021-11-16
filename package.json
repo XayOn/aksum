@@ -10,7 +10,7 @@
         "publish": "node -e \"require('gh-pages').publish('dist')\""
     },
     "dependencies": {
-        "aws-sdk": "^2.658.0",
+        "aws-sdk": "^2.814.0",
         "core-js": "^3.6.4",
         "parse-filepath": "^1.0.2",
         "vue": "^2.6.11",

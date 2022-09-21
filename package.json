@@ -15,7 +15,7 @@
         "parse-filepath": "^1.0.2",
         "vue": "^2.6.11",
         "vue-i18n": "^8.17.3",
-        "vuetify": "^2.2.11",
+        "vuetify": "^2.6.10",
         "webtorrent": "^0.108.1"
     },
     "devDependencies": {
